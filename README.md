@@ -1,4 +1,4 @@
-# 🛡️ MRPL Sovereign AI Workbench
+# MRPL Sovereign AI Workbench
 ### *Air-Gapped Industrial Knowledge & Multimodal Agentic AI*
 **Smart India Hackathon 2026 — Problem Statement: SIH26117**
 
@@ -10,14 +10,14 @@
 ---
 
 > [!IMPORTANT]
-> ### 🏭 The Executive Summary for Jury & Leadership
+> ### The Executive Summary for Jury & Leadership
 > **Confidential refinery documents must never leave the facility.**
 > 
 > The **MRPL Sovereign AI Workbench** is a 100% self-hosted intelligence platform designed specifically for **Mangalore Refinery and Petrochemicals Limited**. It performs complex engineering document review, scanned inspection analysis, and SOP compliance checking **entirely on local organization hardware**—with mathematically proven zero external network transmission.
 
 ---
 
-## ⚡ How It Works: The Sovereign Flow
+## How It Works: The Sovereign Flow
 
 ```mermaid
 flowchart TD
@@ -27,24 +27,24 @@ flowchart TD
     classDef tool fill:#451a03,stroke:#fb923c,stroke-width:2px,color:#f8fafc;
     classDef output fill:#14532d,stroke:#4ade80,stroke-width:2px,color:#f8fafc;
 
-    User([👤 Refinery Engineer]):::input -->|Uploads Scanned Report / Question| WebUI[🖥️ Command Center UI]:::input
-    WebUI -->|Local API Call| Router{🔀 Smart Router}:::router
+    User([Refinery Engineer]):::input -->|Uploads Scanned Report / Question| WebUI[Command Center UI]:::input
+    WebUI -->|Local API Call| Router{Smart Router}:::router
 
     %% Capabilities
-    Router -->|Scanned Page / Image| Vision["👁️ Vision Model<br/><b>Qwen2.5-VL</b>"]:::model
-    Router -->|SOP Question| RAG["📚 Local RAG Search<br/><b>Refinery SOP Manuals</b>"]:::tool
-    Router -->|Engineering Math| Sandbox["🔒 Docker Sandbox<br/><b>Isolated Runner</b>"]:::tool
+    Router -->|Scanned Page / Image| Vision["Vision Model<br/><b>Qwen2.5-VL</b>"]:::model
+    Router -->|SOP Question| RAG["Local RAG Search<br/><b>Refinery SOP Manuals</b>"]:::tool
+    Router -->|Engineering Math| Sandbox["Docker Sandbox<br/><b>Isolated Runner</b>"]:::tool
 
     %% Synthesis
-    Vision -->|Extracted Findings| Reasoning["🧠 Reasoning Core<br/><b>Ling 3.0 / Ornith</b>"]:::model
+    Vision -->|Extracted Findings| Reasoning["Reasoning Core<br/><b>Ling 3.0 / Ornith</b>"]:::model
     RAG -->|Grounding Evidence| Reasoning
     Sandbox -->|Verified Calculations| Reasoning
 
     %% Final Deliverable
-    Reasoning --> Deliverable["📄 Verified Sign-Off Deliverable<br/><b>Approval Note & Findings</b>"]:::output
+    Reasoning --> Deliverable["Verified Sign-Off Deliverable<br/><b>Approval Note & Findings</b>"]:::output
 
     %% Air-gap perimeter
-    subgraph AirGap ["  🛡️ 100% AIR-GAPPED HARDWARE PERIMETER (NO INTERNET)  "]
+    subgraph AirGap ["  100% AIR-GAPPED HARDWARE PERIMETER (NO INTERNET)  "]
         WebUI
         Router
         Vision
@@ -57,41 +57,41 @@ flowchart TD
 
 ---
 
-## 🤖 The Multi-Model Squad
+## The Multi-Model Squad
 
 Rather than relying on one generic model for all tasks, the workbench deploys specialized, open-weight AI models tailored for distinct industrial jobs:
 
 | Modality | Dedicated Model | Plain-English Role | Industrial Responsibility |
 | :--- | :--- | :--- | :--- |
-| **👁️ Vision** | `Qwen2.5-VL-3B` | **"The Eyes"** | Reads scanned inspection sheets, equipment photos, and P&ID drawings. |
-| **🧠 Reasoning** | `Ling-3.0-tiny` / `Ornith-9B` | **"The Brain"** | Evaluates refinery standards, assesses risk, and formulates step-by-step sign-offs. |
-| **💻 Coding** | `Qwen2.5-Coder` / `Ling-3.0` | **"The Engineer"** | Writes and executes verified calculations (flow rates, tolerances) in an isolated container. |
-| **🎙️ Voice (ASR)** | `Qwen3-ASR-1.7B` | **"The Ears"** | Transcribes field voice notes and radio logs from maintenance crews. |
-| **🔍 Memory (RAG)** | `nomic-embed-text` | **"The Archivist"** | Indexes and retrieves paragraphs from hundreds of refinery manuals in milliseconds. |
+| **Vision** | `Qwen2.5-VL-3B` | **"The Eyes"** | Reads scanned inspection sheets, equipment photos, and P&ID drawings. |
+| **Reasoning** | `Ling-3.0-tiny` / `Ornith-9B` | **"The Brain"** | Evaluates refinery standards, assesses risk, and formulates step-by-step sign-offs. |
+| **Coding** | `Qwen2.5-Coder` / `Ling-3.0` | **"The Engineer"** | Writes and executes verified calculations (flow rates, tolerances) in an isolated container. |
+| **Voice (ASR)** | `Qwen3-ASR-1.7B` | **"The Ears"** | Transcribes field voice notes and radio logs from maintenance crews. |
+| **Memory (RAG)** | `nomic-embed-text` | **"The Archivist"** | Indexes and retrieves paragraphs from hundreds of refinery manuals in milliseconds. |
 
 ---
 
-## 🌟 Core Pillars for Industrial Operations
+## Core Pillars for Industrial Operations
 
 | Pillar | How It Works | Industrial Benefit |
 | :--- | :--- | :--- |
-| **📄 Scanned Document Intelligence** | Automatically detects whether a PDF page is digital text or a scanned raster, rendering scanned sheets to local computer vision. | Eliminates manual re-typing of physical plant inspection records. |
-| **🛡️ Zero-Leakage Sandbox** | Runs generated math and analysis scripts inside a locked Docker container with `--network=none` and strict RAM limits. | Safe deterministic calculations with no risk to plant control systems. |
-| **🔍 Grounded SOP Search** | Uses Hybrid Retrieval (Dense Vector + BM25 keyword matching) to cite exact pages and paragraphs. | Eliminates AI hallucinations; every finding is backed by refinery policy. |
-| **🔏 Cryptographic Audit Trail** | Signs every prompt, tool execution, and output with Ed25519 asymmetric digital keys stored in an append-only ledger. | Complete non-repudiation for safety audits and regulatory compliance. |
+| **Scanned Document Intelligence** | Automatically detects whether a PDF page is digital text or a scanned raster, rendering scanned sheets to local computer vision. | Eliminates manual re-typing of physical plant inspection records. |
+| **Zero-Leakage Sandbox** | Runs generated math and analysis scripts inside a locked Docker container with `--network=none` and strict RAM limits. | Safe deterministic calculations with no risk to plant control systems. |
+| **Grounded SOP Search** | Uses Hybrid Retrieval (Dense Vector + BM25 keyword matching) to cite exact pages and paragraphs. | Eliminates AI hallucinations; every finding is backed by refinery policy. |
+| **Cryptographic Audit Trail** | Signs every prompt, tool execution, and output with Ed25519 asymmetric digital keys stored in an append-only ledger. | Complete non-repudiation for safety audits and regulatory compliance. |
 
 ---
 
-## 🚀 Quickstart: 3 Simple Steps
+## Quickstart: 3 Simple Steps
 
-### 1️⃣ Clone & Configure
+### 1. Clone & Configure
 ```bash
 cp .env.example .env
 # Default is already configured for local Ollama runtime:
 # MODEL_BACKEND="ollama"
 ```
 
-### 2️⃣ Start the Local Backend
+### 2. Start the Local Backend
 ```bash
 cd apps/backend
 python -m venv venv && source venv/bin/activate  # Or: venv\Scripts\activate on Windows
@@ -100,7 +100,7 @@ uvicorn app.main:app --port 8000
 ```
 *Live API documentation: [http://localhost:8000/docs](http://localhost:8000/docs)*
 
-### 3️⃣ Start the Command Center UI
+### 3. Start the Command Center UI
 ```bash
 cd apps/frontend
 npm install
@@ -110,7 +110,7 @@ npm run dev
 
 ---
 
-## 🔎 Independent Air-Gap Verification
+## Independent Air-Gap Verification
 
 To verify that the workbench never sends data over the internet during operation:
 
@@ -123,7 +123,7 @@ python scripts/network_check.py
 
 ---
 
-## 📂 Minimal Project Layout
+## Minimal Project Layout
 
 ```text
 SIH26117/

@@ -6,6 +6,7 @@ export function useTaskStream() {
   const [messages, setMessages] = useState<TaskMessage[]>([]);
   const [isStreaming, setIsStreaming] = useState(false);
   const [currentTaskId, setCurrentTaskId] = useState<string | null>(null);
+  const [reasoningTrace, setReasoningTrace] = useState<Array<{ id: string; type: string; message: string }>>([]);
   const abortControllerRef = useRef<AbortController | null>(null);
 
   // RAF Throttling Buffer for UI Jank elimination
@@ -113,6 +114,7 @@ export function useTaskStream() {
       const userMsgId = `user-${Date.now()}`;
       const assistantMsgId = `asst-${Date.now()}`;
       activeAssistantIdRef.current = assistantMsgId;
+      setReasoningTrace([]);
       tokenBufferRef.current = '';
       reasoningBufferRef.current = '';
 
@@ -199,8 +201,12 @@ export function useTaskStream() {
                   scheduleBatchedUpdate();
                 } else if (eventType === 'reasoning' && data.reasoning) {
                   reasoningBufferRef.current += data.reasoning;
+                  setReasoningTrace((trace) => [...trace, { id: `${Date.now()}-${trace.length}`, type: 'reasoning', message: data.reasoning }]);
                   scheduleBatchedUpdate();
+                } else if (eventType === 'status' && data.message) {
+                  setReasoningTrace((trace) => [...trace, { id: `${Date.now()}-${trace.length}`, type: data.status || 'status', message: data.message }]);
                 } else if (eventType === 'tool_call') {
+                  setReasoningTrace((trace) => [...trace, { id: `${Date.now()}-${trace.length}`, type: 'tool', message: `Calling ${data.tool_name || data.tool}` }]);
                   flushBuffers();
                   const toolName = data.tool_name || data.tool;
                   if (toolName) {
@@ -326,6 +332,7 @@ export function useTaskStream() {
     messages,
     isStreaming,
     currentTaskId,
+    reasoningTrace,
     submitTask,
     cancelTask,
     clearMessages,

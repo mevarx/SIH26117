@@ -1,0 +1,12 @@
+{
+  "scripts": {
+    "setup": "python -m venv .venv && .venv/bin/pip install -r apps/backend/requirements.txt && npm ci --prefix apps/frontend",
+    "run": "npm --prefix apps/frontend run dev -- --host 0.0.0.0"
+  },
+  "resources": {
+    "preview": {
+      "cpu": 1,
+      "memoryGiB": 2
+    }
+  }
+}

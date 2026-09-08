@@ -6,6 +6,7 @@ Transcribes spoken audio into text using local models (e.g. Qwen3-ASR-1.7B-GGUF)
 import io
 import logging
 import re
+import wave
 from pathlib import Path
 from typing import Optional, Union
 
@@ -28,6 +29,31 @@ class ASRClient:
 
     def _get_active_model_id(self) -> str:
         return self.model_id or model_registry.get_model_id("asr")
+
+    @staticmethod
+    def remove_wav_silence(audio_bytes: bytes) -> bytes:
+        """Use local WebRTC VAD to remove non-speech WAV frames when available."""
+        try:
+            import webrtcvad
+            with wave.open(io.BytesIO(audio_bytes), "rb") as source:
+                if source.getnchannels() != 1 or source.getsampwidth() != 2 or source.getframerate() not in (8000, 16000, 32000, 48000):
+                    return audio_bytes
+                rate, frames = source.getframerate(), source.readframes(source.getnframes())
+            frame_length = int(rate * 0.03) * 2
+            vad = webrtcvad.Vad(2)
+            speech = b"".join(frame for start in range(0, len(frames) - frame_length + 1, frame_length)
+                              if vad.is_speech((frame := frames[start:start + frame_length]), rate))
+            if not speech:
+                return audio_bytes
+            output = io.BytesIO()
+            with wave.open(output, "wb") as target:
+                target.setnchannels(1)
+                target.setsampwidth(2)
+                target.setframerate(rate)
+                target.writeframes(speech)
+            return output.getvalue()
+        except (ImportError, wave.Error, EOFError):
+            return audio_bytes
 
     @staticmethod
     def clean_transcript(raw_text: str) -> str:
@@ -70,6 +96,11 @@ class ASRClient:
             suffix = Path(effective_filename).suffix.lower()
 
         effective_mime = mime_type or ("audio/wav" if suffix == ".wav" else f"audio/{suffix.lstrip('.')}")
+        if suffix == ".wav":
+            processed = self.remove_wav_silence(audio_bytes)
+            if len(processed) < len(audio_bytes):
+                logger.info("VAD isolated speech from %s (%d -> %d bytes)", effective_filename, len(audio_bytes), len(processed))
+                audio_bytes = processed
 
         try:
             # Use LocalClient transcribe_audio

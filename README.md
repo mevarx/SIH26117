@@ -116,7 +116,7 @@ graph TB
     USER["Refinery Engineer"]
 
     subgraph BROWSER["Frontend — localhost:5173"]
-        UI["React Command Center Dashboard"]
+        UI["Seva AI Command Console\nHero & Interactive Moonlit Workbench"]
     end
 
     subgraph SERVER["Backend — localhost:8000"]
@@ -384,7 +384,7 @@ sequenceDiagram
 
 | Layer | Technology | Purpose |
 |-------|-----------|---------|
-| Frontend | React + Vite | Command center dashboard |
+| Frontend | React 19 + Vite 6 + Tailwind CSS | Seva AI Command Console (Hero landing, moonlit chat, real-time SSE stream, Inspector Drawer) |
 | Backend | Python FastAPI | REST API server |
 | Agent Framework | LangGraph | Multi-step agentic loop with critic |
 | Vector Database | Qdrant | Hybrid dense + BM25 document search |

@@ -231,7 +231,7 @@ export function ConsoleShell({ onReturnToHero }: ConsoleShellProps) {
             onRunCode={handleRunCodeInSandbox}
           />
 
-          <AgentThoughtConsole events={reasoningTrace} />
+          <AgentThoughtConsole events={reasoningTrace} isStreaming={isStreaming} />
 
           <ChatBar
             currentMode={currentMode}

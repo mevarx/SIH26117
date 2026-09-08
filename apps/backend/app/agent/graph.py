@@ -32,16 +32,21 @@ from app.tools.file_tool import (
     read_file,
     write_file,
 )
+from app.integrations.plant import create_work_order, fetch_scada_telemetry
 
 logger = logging.getLogger(__name__)
 
-SYSTEM_PROMPT = """You are Sovereign Agent, an autonomous enterprise AI assistant.
+SYSTEM_PROMPT = """You are an Autonomous Digital Plant Engineer operating inside an air-gapped refinery.
 You have access to specialized tools to assist the user:
 - calculator(expression): Evaluate mathematical expressions deterministically.
 - search_document(file_path, query): Search text in PDF, DOCX, and TXT files.
 - read_file(file_path): Read file contents within allowed directories.
 - write_file(file_path, content): Write content to a file within allowed directories.
 - run_sandbox_code(code, language): Run Python code in an isolated Docker sandbox.
+- fetch_live_scada_telemetry(sensor_tag): Read live temperature, pressure, and RPM telemetry.
+- create_sap_work_order(equipment_id, fault_description, priority_level, sop_reference): Create a SAP PM work order only after a critical fault is confirmed.
+
+Cross-reference visual or document findings with live sensor data before declaring a critical failure. Explain concise, user-safe action summaries and never expose hidden chain-of-thought.
 
 When you need to call a tool, you may provide an XML tool call:
 <tool_call>
@@ -82,6 +87,8 @@ class AgentGraph:
             READ_FILE_TOOL_SCHEMA,
             WRITE_FILE_TOOL_SCHEMA,
             sandbox_schema,
+            {"type": "function", "function": {"name": "fetch_live_scada_telemetry", "description": "Fetch current SCADA metrics for a sensor tag.", "parameters": {"type": "object", "properties": {"sensor_tag": {"type": "string"}}, "required": ["sensor_tag"]}}},
+            {"type": "function", "function": {"name": "create_sap_work_order", "description": "Create a SAP PM work order for a confirmed critical fault.", "parameters": {"type": "object", "properties": {"equipment_id": {"type": "string"}, "fault_description": {"type": "string"}, "priority_level": {"type": "string", "enum": ["LOW", "MEDIUM", "HIGH", "CRITICAL"]}, "sop_reference": {"type": "string"}}, "required": ["equipment_id", "fault_description", "priority_level", "sop_reference"]}}},
         ]
 
     async def _execute_tool(self, name: str, params: Dict[str, Any]) -> Any:
@@ -115,6 +122,12 @@ class AgentGraph:
                     "success": res.success,
                     "duration": res.duration_seconds,
                 }
+            elif name == "fetch_live_scada_telemetry":
+                return fetch_scada_telemetry(params.get("sensor_tag", ""))
+            elif name == "create_sap_work_order":
+                if params.get("priority_level", "").upper() != "CRITICAL":
+                    return "Error: SAP work orders can only be created for confirmed CRITICAL faults."
+                return create_work_order(**params)
             else:
                 return f"Error: Unknown tool '{name}'"
         except Exception as exc:

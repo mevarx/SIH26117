@@ -4,6 +4,7 @@ import { LeftSidebar, SessionItem } from './LeftSidebar';
 import { InspectorDrawer } from './InspectorDrawer';
 import { ChatFeed } from '../chat/ChatFeed';
 import { ChatBar } from '../chat/ChatBar';
+import { AgentThoughtConsole } from '../chat/AgentThoughtConsole';
 import { DragDropOverlay } from '../chat/DragDropOverlay';
 import { SettingsModal } from '../modals/SettingsModal';
 import { SystemInfoModal } from '../modals/SystemInfoModal';
@@ -46,6 +47,7 @@ export function ConsoleShell({ onReturnToHero }: ConsoleShellProps) {
     submitTask,
     cancelTask,
     clearMessages,
+    reasoningTrace,
   } = useTaskStream();
 
   // Drag and drop hook
@@ -228,6 +230,8 @@ export function ConsoleShell({ onReturnToHero }: ConsoleShellProps) {
             }}
             onRunCode={handleRunCodeInSandbox}
           />
+
+          <AgentThoughtConsole events={reasoningTrace} />
 
           <ChatBar
             currentMode={currentMode}

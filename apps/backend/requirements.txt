@@ -13,4 +13,6 @@ Pillow==11.1.0
 rank-bm25==0.2.2
 aiofiles==24.1.0
 cryptography>=42.0.0
+langdetect==1.0.9
+webrtcvad-wheels==2.0.14
 

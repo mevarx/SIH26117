@@ -27,6 +27,7 @@ from fastapi.responses import StreamingResponse
 from app.agent.graph import agent_graph
 from app.agent.router import task_router
 from app.agent.state import AgentState
+from app.agent.language import detect_query_language, translation_instruction
 from app.config import settings
 from app.models.base import ChatMessage, GenerationRequest
 from app.models.registry import model_registry
@@ -139,6 +140,10 @@ async def _execute_task_pipeline(task_id: str, request: TaskRequest):
         )
 
         effective_prompt = request.prompt
+        language = detect_query_language(effective_prompt)
+        if language != "en":
+            emit_event(StatusEvent(status="translating", message=f"Translating {language} query with local IndicTrans2...", task_id=task_id))
+            effective_prompt = translation_instruction(effective_prompt, language)
 
         if audio_transcripts:
             emit_event(StatusEvent(status="audio_processing", message="ASR transcribing audio attachments...", task_id=task_id))
@@ -163,7 +168,7 @@ async def _execute_task_pipeline(task_id: str, request: TaskRequest):
             image_descriptions = []
             for fp in remaining_paths:
                 if vision_middleware.is_image_path(fp):
-                    desc = await vision_middleware.describe_image_attachment(fp)
+                    desc = await vision_middleware.inspect_with_ocr_fallback(fp)
                     image_descriptions.append(f"--- Image Analysis ({Path(fp).name}) ---\n{desc}")
             if image_descriptions:
                 effective_prompt = (
@@ -206,9 +211,12 @@ async def _execute_task_pipeline(task_id: str, request: TaskRequest):
                 prompt=effective_prompt,
                 max_steps=6,
             )
-            completed_state = await agent_graph.run(state)
-            result_payload = completed_state.final_output
-            artifacts = completed_state.artifacts
+            async for event in agent_graph.stream_run(state):
+                # The task pipeline owns the single terminal SSE event.
+                if event.event_type.value != "completion":
+                    emit_event(event)
+            result_payload = state.final_output
+            artifacts = state.artifacts
 
         elif pipeline_type == TaskType.RAG:
             emit_event(StatusEvent(status="retrieving", message="Searching local knowledge base...", task_id=task_id))

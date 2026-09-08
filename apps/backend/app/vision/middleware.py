@@ -9,6 +9,7 @@ multimodal content blocks for the Vision Tower.
 
 import asyncio
 import base64
+import json
 import io
 import logging
 from pathlib import Path
@@ -160,6 +161,27 @@ class MultimodalVisionMiddleware:
         except Exception as exc:
             logger.error("Failed to describe image attachment %s with Qwen2.5-VL: %s", p.name, exc)
             return f"[Visual inspection failed for {p.name}: {str(exc)}]"
+
+    async def inspect_with_ocr_fallback(self, file_path: str, confidence_threshold: float = 0.80) -> str:
+        """Use vision first, then preserve text through OCR when vision is uncertain."""
+        raw = await self.describe_image_attachment(
+            file_path,
+            "Inspect the image. Return JSON only: {\"description\": string, \"bbox_confidence\": number}. "
+            "bbox_confidence is your confidence (0-1) in visible-text and component localization.",
+        )
+        try:
+            result = json.loads(raw.removeprefix("```json").removesuffix("```").strip())
+            description = str(result.get("description", ""))
+            confidence = float(result.get("bbox_confidence", 0))
+        except (ValueError, TypeError, json.JSONDecodeError):
+            description, confidence = raw, 0.0
+
+        if confidence >= confidence_threshold:
+            return description
+
+        from app.vision.ocr import ocr_image
+        text = await ocr_image(Path(file_path).read_bytes())
+        return f"{description}\n\n[OCR fallback; vision confidence {confidence:.2f}]\n{text}".strip()
 
 
 # Singleton vision middleware

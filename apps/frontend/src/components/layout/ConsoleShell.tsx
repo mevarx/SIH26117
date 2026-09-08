@@ -214,13 +214,15 @@ export function ConsoleShell({ onReturnToHero }: ConsoleShellProps) {
           onNewSession={handleNewSession}
           onDeleteSession={handleDeleteSession}
           onClearAllSessions={handleClearAllSessions}
+          onReturnToHero={onReturnToHero}
         />
 
         {/* Center Chat Feed & Composer */}
         <div className="flex-1 flex flex-col h-full overflow-hidden relative">
           <ChatFeed
             messages={messages}
-            onSelectPromptChip={(prompt) => setExternalPrompt(prompt)}
+            onSubmitPrompt={handleSubmitPrompt}
+            onSelectPromptChip={(prompt) => handleSubmitPrompt(prompt)}
             onOpenSandbox={() => {
               setCurrentMode('sandbox');
               setIsInspectorOpen(true);
@@ -228,19 +230,21 @@ export function ConsoleShell({ onReturnToHero }: ConsoleShellProps) {
             onRunCode={handleRunCodeInSandbox}
           />
 
-          <ChatBar
-            currentMode={currentMode}
-            onSelectMode={handleSelectMode}
-            onSubmitPrompt={handleSubmitPrompt}
-            onCancelStream={cancelTask}
-            isStreaming={isStreaming}
-            externalPrompt={externalPrompt}
-            onClearExternalPrompt={() => setExternalPrompt(undefined)}
-            temperature={temperature}
-            onChangeTemperature={setTemperature}
-            sandboxEnforced={sandboxEnforced}
-            onToggleSandboxEnforced={setSandboxEnforced}
-          />
+          {messages.length > 0 && (
+            <ChatBar
+              currentMode={currentMode}
+              onSelectMode={handleSelectMode}
+              onSubmitPrompt={handleSubmitPrompt}
+              onCancelStream={cancelTask}
+              isStreaming={isStreaming}
+              externalPrompt={externalPrompt}
+              onClearExternalPrompt={() => setExternalPrompt(undefined)}
+              temperature={temperature}
+              onChangeTemperature={setTemperature}
+              sandboxEnforced={sandboxEnforced}
+              onToggleSandboxEnforced={setSandboxEnforced}
+            />
+          )}
         </div>
 
         {/* Right Inspector Drawer per PRD Section 4.3 */}

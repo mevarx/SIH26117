@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Shield, Plus, SlidersHorizontal, Edit2, Check } from 'lucide-react';
+import { Shield, Plus, SlidersHorizontal, Edit2, Check, ArrowLeft } from 'lucide-react';
 import { EndpointStatus } from './EndpointStatus';
 import { Button } from '../ui/Button';
 
@@ -30,22 +30,34 @@ export function TopBar({
 
   return (
     <header className="h-12 w-full border-b border-[var(--border-subtle)] bg-[var(--bg-base)] px-4 flex items-center justify-between z-20 shrink-0 select-none">
-      {/* Left: Endpoint status indicator with popover */}
-      <div className="flex items-center gap-4">
+      {/* Left: Brand / Return to Homepage + Endpoint status indicator + Session Name */}
+      <div className="flex items-center gap-3.5">
+        <button
+          onClick={onReturnToHero}
+          title="Return to Homepage"
+          className="flex items-center gap-2 px-2.5 py-1 rounded-[var(--radius-sm)] bg-[var(--bg-surface)] border border-[var(--border-subtle)] hover:border-[var(--accent-border)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-all cursor-pointer group"
+        >
+          <ArrowLeft
+            size={13}
+            className="text-[var(--text-muted)] group-hover:text-[var(--accent)] group-hover:-translate-x-0.5 transition-transform"
+          />
+          <div className="flex items-center justify-center w-5 h-5 rounded bg-[var(--accent)] text-black font-semibold">
+            <Shield size={12} />
+          </div>
+          <span className="text-xs font-semibold text-[var(--text-primary)]">Sovereign AI</span>
+          <span className="text-[10px] px-1 py-0.5 rounded bg-[var(--bg-base)] text-[var(--text-muted)] font-mono border border-[var(--border-subtle)] hidden sm:inline-block">
+            Home
+          </span>
+        </button>
+
+        <div className="h-4 w-px bg-[var(--border-subtle)]" />
+
         <EndpointStatus />
 
         <div className="h-4 w-px bg-[var(--border-subtle)]" />
 
-        {/* Center-left: Brand mark + Session Name (editable inline) */}
-        <div className="flex items-center gap-2">
-          <button
-            onClick={onReturnToHero}
-            title={onReturnToHero ? "Return to Hero Overview" : undefined}
-            className="flex items-center justify-center h-6 w-6 rounded-[var(--radius-sm)] bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-[var(--text-muted)] hover:text-[var(--accent)] hover:border-[var(--accent-border)] transition-colors cursor-pointer"
-          >
-            <Shield size={13} />
-          </button>
-
+        {/* Session Name (editable inline) */}
+        <div className="flex items-center gap-1.5">
           {isEditing ? (
             <div className="flex items-center gap-1">
               <input

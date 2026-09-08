@@ -7,6 +7,7 @@ import {
   Upload,
   Trash2,
   FileText,
+  Home,
 } from 'lucide-react';
 import { Tooltip } from '../ui/Tooltip';
 import { IngestedDoc } from '../../types/knowledge';
@@ -25,6 +26,7 @@ interface LeftSidebarProps {
   onNewSession: () => void;
   onDeleteSession: (id: string) => void;
   onClearAllSessions: () => void;
+  onReturnToHero?: () => void;
 }
 
 export function LeftSidebar({
@@ -34,6 +36,7 @@ export function LeftSidebar({
   onNewSession,
   onDeleteSession,
   onClearAllSessions,
+  onReturnToHero,
 }: LeftSidebarProps) {
   // Persist sidebar state in localStorage per PRD Section 4.2
   const [isExpanded, setIsExpanded] = useState<boolean>(() => {
@@ -120,8 +123,28 @@ export function LeftSidebar({
         )}
       </div>
 
-      {/* New Session Action */}
-      <div className="p-2 border-b border-[var(--border-subtle)] shrink-0">
+      {/* Top Actions: Homepage & New Session */}
+      <div className="p-2 border-b border-[var(--border-subtle)] flex flex-col gap-1.5 shrink-0">
+        {isExpanded ? (
+          <button
+            onClick={onReturnToHero}
+            className="w-full flex items-center gap-2 px-3 py-1.5 rounded-[var(--radius-md)] text-xs font-medium text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--border-subtle)] transition-colors cursor-pointer group"
+            title="Return to Homepage"
+          >
+            <Home size={14} className="text-[var(--accent)] group-hover:scale-110 transition-transform" />
+            <span>Back to Homepage</span>
+          </button>
+        ) : (
+          <Tooltip content="Back to Homepage" side="right">
+            <button
+              onClick={onReturnToHero}
+              className="w-full flex items-center justify-center h-8 rounded-[var(--radius-md)] text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--border-subtle)] transition-colors cursor-pointer group"
+            >
+              <Home size={14} className="text-[var(--accent)] group-hover:scale-110 transition-transform" />
+            </button>
+          </Tooltip>
+        )}
+
         {isExpanded ? (
           <button
             onClick={onNewSession}

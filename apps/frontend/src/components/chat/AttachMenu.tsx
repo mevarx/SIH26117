@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Paperclip, FileText, Image as ImageIcon, FileCode } from 'lucide-react';
+import { Paperclip, FileText, Image as ImageIcon, FileCode, Mic } from 'lucide-react';
 import { DropdownMenu, DropdownItem } from '../ui/DropdownMenu';
 import { TaskAttachment } from '../../types/task';
 
@@ -12,11 +12,13 @@ export function AttachMenu({ onAttachFile, isUploading = false }: AttachMenuProp
   const docInputRef = useRef<HTMLInputElement>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
   const codeInputRef = useRef<HTMLInputElement>(null);
+  const audioInputRef = useRef<HTMLInputElement>(null);
 
-  const processFile = async (file: File, type: 'document' | 'image' | 'code') => {
-    // Try uploading to backend /api/tasks/upload for instant OCR
+  const processFile = async (file: File, type: 'document' | 'image' | 'code' | 'audio') => {
+    // Try uploading to backend /api/tasks/upload for instant OCR / ASR transcription
     let filePath = `/data/uploads/${file.name}`;
     let ocrApplied = type === 'image' || file.name.endsWith('.pdf');
+    let asrApplied = type === 'audio';
     let extractedPreview = '';
 
     try {
@@ -31,6 +33,7 @@ export function AttachMenu({ onAttachFile, isUploading = false }: AttachMenuProp
         if (json.data) {
           filePath = json.data.file_path || filePath;
           ocrApplied = json.data.ocr_applied ?? ocrApplied;
+          asrApplied = json.data.asr_applied ?? asrApplied;
           extractedPreview = json.data.extracted_text || '';
         }
       }
@@ -43,12 +46,13 @@ export function AttachMenu({ onAttachFile, isUploading = false }: AttachMenuProp
       filePath,
       fileSize: file.size,
       ocrApplied,
+      asrApplied,
       extractedPreview,
       type,
     });
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'document' | 'image' | 'code') => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'document' | 'image' | 'code' | 'audio') => {
     const file = e.target.files?.[0];
     if (file) {
       processFile(file, type);
@@ -57,6 +61,13 @@ export function AttachMenu({ onAttachFile, isUploading = false }: AttachMenuProp
   };
 
   const items: DropdownItem[] = [
+    {
+      id: 'audio',
+      label: 'Audio Note (ASR)',
+      description: 'WAV, MP3, M4A, OGG, FLAC',
+      icon: Mic,
+      onClick: () => audioInputRef.current?.click(),
+    },
     {
       id: 'doc',
       label: 'Document',
@@ -82,6 +93,13 @@ export function AttachMenu({ onAttachFile, isUploading = false }: AttachMenuProp
 
   return (
     <>
+      <input
+        ref={audioInputRef}
+        type="file"
+        accept=".wav,.mp3,.m4a,.ogg,.flac,.aac,.webm,.wma,audio/*"
+        className="hidden"
+        onChange={(e) => handleFileChange(e, 'audio')}
+      />
       <input
         ref={docInputRef}
         type="file"

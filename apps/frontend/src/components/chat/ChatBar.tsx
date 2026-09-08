@@ -5,6 +5,7 @@ import {
   Settings2,
   X,
   FileText,
+  Mic,
 } from 'lucide-react';
 import { ModeSwitcher } from './ModeSwitcher';
 import { AttachMenu } from './AttachMenu';
@@ -93,12 +94,21 @@ export function ChatBar({
         {/* Removable Attached File Chip per PRD Section 4.5 */}
         {attachment && (
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-[var(--radius-md)] bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-xs text-[var(--text-muted)] w-fit animate-in fade-in-50">
-            <FileText size={13} className="text-[var(--accent)] shrink-0" />
+            {attachment.type === 'audio' ? (
+              <Mic size={13} className="text-amber-400 shrink-0" />
+            ) : (
+              <FileText size={13} className="text-[var(--accent)] shrink-0" />
+            )}
             <span className="font-medium text-[var(--text-primary)] truncate max-w-[200px]">
               {attachment.filename}
             </span>
             <span className="text-[10px]">({Math.round(attachment.fileSize / 1024)} KB)</span>
-            {attachment.ocrApplied && (
+            {attachment.asrApplied && (
+              <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-300 font-semibold border border-amber-500/20">
+                ASR Transcribed
+              </span>
+            )}
+            {attachment.ocrApplied && !attachment.asrApplied && (
               <span className="text-[10px] px-1 py-0.2 rounded bg-[var(--accent-muted)] text-[var(--accent)] font-semibold">
                 OCR Applied
               </span>

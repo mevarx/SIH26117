@@ -221,8 +221,7 @@ export function ConsoleShell({ onReturnToHero }: ConsoleShellProps) {
         <div className="flex-1 flex flex-col h-full overflow-hidden relative">
           <ChatFeed
             messages={messages}
-            onSubmitPrompt={handleSubmitPrompt}
-            onSelectPromptChip={(prompt) => handleSubmitPrompt(prompt)}
+            onSelectPromptChip={(prompt) => setExternalPrompt(prompt)}
             onOpenSandbox={() => {
               setCurrentMode('sandbox');
               setIsInspectorOpen(true);
@@ -230,21 +229,19 @@ export function ConsoleShell({ onReturnToHero }: ConsoleShellProps) {
             onRunCode={handleRunCodeInSandbox}
           />
 
-          {messages.length > 0 && (
-            <ChatBar
-              currentMode={currentMode}
-              onSelectMode={handleSelectMode}
-              onSubmitPrompt={handleSubmitPrompt}
-              onCancelStream={cancelTask}
-              isStreaming={isStreaming}
-              externalPrompt={externalPrompt}
-              onClearExternalPrompt={() => setExternalPrompt(undefined)}
-              temperature={temperature}
-              onChangeTemperature={setTemperature}
-              sandboxEnforced={sandboxEnforced}
-              onToggleSandboxEnforced={setSandboxEnforced}
-            />
-          )}
+          <ChatBar
+            currentMode={currentMode}
+            onSelectMode={handleSelectMode}
+            onSubmitPrompt={handleSubmitPrompt}
+            onCancelStream={cancelTask}
+            isStreaming={isStreaming}
+            externalPrompt={externalPrompt}
+            onClearExternalPrompt={() => setExternalPrompt(undefined)}
+            temperature={temperature}
+            onChangeTemperature={setTemperature}
+            sandboxEnforced={sandboxEnforced}
+            onToggleSandboxEnforced={setSandboxEnforced}
+          />
         </div>
 
         {/* Right Inspector Drawer per PRD Section 4.3 */}

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import rehypeHighlight from 'rehype-highlight';
 import remarkGfm from 'remark-gfm';
-import { User, Shield, FileText, Copy, Check, Lock, Sparkles } from 'lucide-react';
+import { User, Shield, FileText, Copy, Check, Lock, Sparkles, Mic } from 'lucide-react';
 import { TaskMessage } from '../../types/task';
 import { ReasoningAccordion } from './ReasoningAccordion';
 import { ToolExecutionCard } from './ToolExecutionCard';
@@ -144,10 +144,19 @@ export function MessageItem({ message, onOpenSandbox, onRunCode }: MessageItemPr
         {/* Attached file chip in user bubble */}
         {isUser && message.attachment && (
           <div className="mb-2 flex items-center gap-2 px-3 py-1.5 rounded-[var(--radius-md)] bg-[#0E0F17] border border-white/10 text-xs text-[var(--text-muted)] shadow-sm">
-            <FileText size={13} className="text-[var(--accent)]" />
+            {message.attachment.type === 'audio' ? (
+              <Mic size={13} className="text-amber-400 shrink-0" />
+            ) : (
+              <FileText size={13} className="text-[var(--accent)] shrink-0" />
+            )}
             <span className="font-medium text-white">{message.attachment.filename}</span>
             <span className="text-[10px] text-white/50">({Math.round(message.attachment.fileSize / 1024)} KB)</span>
-            {message.attachment.ocrApplied && (
+            {message.attachment.asrApplied && (
+              <span className="text-[10px] px-1.5 py-0.2 rounded bg-amber-500/15 text-amber-300 font-semibold border border-amber-500/20">
+                ASR (Qwen3)
+              </span>
+            )}
+            {message.attachment.ocrApplied && !message.attachment.asrApplied && (
               <span className="text-[10px] px-1.5 py-0.2 rounded bg-[var(--accent-muted)] text-[var(--accent)] font-semibold border border-[var(--accent-border)]">
                 OCR
               </span>

@@ -8,8 +8,9 @@ export interface TaskAttachment {
   fileSize: number;
   charCount?: number;
   ocrApplied?: boolean;
+  asrApplied?: boolean;
   extractedPreview?: string;
-  type?: 'document' | 'image' | 'code';
+  type?: 'document' | 'image' | 'code' | 'audio';
 }
 
 export interface ToolCall {

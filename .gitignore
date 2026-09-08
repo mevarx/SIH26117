@@ -83,3 +83,7 @@ uploads/
 **/uploads/*
 qdrant_storage/
 .qdrant/
+
+# Always track project knowledge base
+!brain.md
+

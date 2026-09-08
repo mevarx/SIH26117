@@ -7,13 +7,9 @@ import { cn } from "@/lib/utils";
 import {
   ImageIcon,
   FileUp,
-  MonitorIcon,
   ArrowUpIcon,
   Paperclip,
   Code2,
-  Palette,
-  Layers,
-  Rocket,
   Shield,
   Lock,
 } from "lucide-react";
@@ -194,44 +190,29 @@ export default function RuixenMoonChat({
         {/* Quick Actions */}
         <div className="flex items-center justify-center flex-wrap gap-2.5 mt-5">
           <QuickAction
-            icon={<Code2 className="w-4 h-4 text-[var(--accent)]" />}
-            label="Generate Code"
-            onClick={() => handleActionClick("Generate a Python script with sandbox isolation and strict memory bounds.")}
-          />
-          <QuickAction
-            icon={<Rocket className="w-4 h-4 text-emerald-400" />}
-            label="Launch App"
-            onClick={() => handleActionClick("Launch and initialize container sandbox test environment.")}
-          />
-          <QuickAction
-            icon={<Layers className="w-4 h-4 text-cyan-400" />}
-            label="UI Components"
-            onClick={() => handleActionClick("Design an accessible UI widget conforming to high-contrast sovereign standards.")}
-          />
-          <QuickAction
-            icon={<Palette className="w-4 h-4 text-purple-400" />}
-            label="Theme Ideas"
-            onClick={() => handleActionClick("Generate dark mode color schemes optimized for low eye fatigue.")}
-          />
-          <QuickAction
-            icon={<Shield className="w-4 h-4 text-amber-400" />}
+            icon={<Shield className="w-4 h-4 text-emerald-400" />}
             label="Audit Zero-Egress"
-            onClick={() => handleActionClick("Verify loopback network firewall policies and audit for any outbound network leaks.")}
+            onClick={() => handleActionClick("Verify loopback network firewall policies and audit for any outbound egress leaks.")}
           />
           <QuickAction
-            icon={<MonitorIcon className="w-4 h-4 text-blue-400" />}
-            label="Landing Page"
-            onClick={() => handleActionClick("Inspect system landing status and telemetry metrics.")}
+            icon={<Code2 className="w-4 h-4 text-[var(--accent)]" />}
+            label="Sandboxed Code"
+            onClick={() => handleActionClick("Execute a Python script with strict memory bounds and zero network access.")}
           />
           <QuickAction
             icon={<FileUp className="w-4 h-4 text-teal-400" />}
-            label="Upload Docs"
+            label="Query Knowledge Base"
             onClick={() => handleActionClick("Query indexed defense procurement files and summarize security protocols.")}
           />
           <QuickAction
-            icon={<ImageIcon className="w-4 h-4 text-rose-400" />}
-            label="Image Assets"
-            onClick={() => handleActionClick("Process image with local OCR and describe visual contents.")}
+            icon={<ImageIcon className="w-4 h-4 text-cyan-400" />}
+            label="Multimodal Vision"
+            onClick={() => handleActionClick("Analyze document scan with local Vision-Language model (Qwen2.5-VL).")}
+          />
+          <QuickAction
+            icon={<Lock className="w-4 h-4 text-amber-400" />}
+            label="Verify Ed25519 Audit"
+            onClick={() => handleActionClick("Verify Ed25519 cryptographic signatures on SHA-256 system audit log chain.")}
           />
         </div>
       </div>
